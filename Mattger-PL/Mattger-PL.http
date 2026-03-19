@@ -1,0 +1,6 @@
+@Mattger_PL_HostAddress = http://localhost:5126
+
+GET {{Mattger_PL_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
