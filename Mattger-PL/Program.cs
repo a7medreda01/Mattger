@@ -30,13 +30,13 @@ namespace Mattger_PL
             // builder.Services.AddDbContext<MattgerDBContext>(options =>
             // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // قراءة Connection String من appsettings.json أو Environment Variable
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-                       ?? Environment.GetEnvironmentVariable("DefaultConnection");
-
+var connectionString = Environment.GetEnvironmentVariable("MYSQL_URL");
 if (string.IsNullOrEmpty(connectionString))
-{
-    throw new Exception("Connection string 'DefaultConnection' not found.");
-}
+    throw new Exception("MYSQL_URL not found!");
+
+// استخدمه في DbContext
+builder.Services.AddDbContext<MattgerDBContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // تسجيل DbContext
 builder.Services.AddDbContext<MattgerDBContext>(options =>
