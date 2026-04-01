@@ -27,12 +27,20 @@ namespace Mattger_PL
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<MattgerDBContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            if (string.IsNullOrEmpty(connectionString))
+            // builder.Services.AddDbContext<MattgerDBContext>(options =>
+            // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            // قراءة Connection String من appsettings.json أو Environment Variable
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                       ?? Environment.GetEnvironmentVariable("DefaultConnection");
+
+if (string.IsNullOrEmpty(connectionString))
 {
-    connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+    throw new Exception("Connection string 'DefaultConnection' not found.");
 }
+
+// تسجيل DbContext
+builder.Services.AddDbContext<MattgerDBContext>(options =>
+    options.UseSqlServer(connectionString));
             builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRep<>));
 
             builder.Services.AddScoped<IProductService, ProductService>();
