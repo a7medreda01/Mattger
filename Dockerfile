@@ -3,6 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY . .
+RUN dotnet add src/Mattger-PL/Mattger-PL.csproj package Pomelo.EntityFrameworkCore.MySql --version 8.0.9
+RUN dotnet restore src/Mattger-PL/Mattger-PL.csproj
 
 RUN dotnet publish Mattger-PL/Mattger-PL.csproj -c Release -o /app
 
