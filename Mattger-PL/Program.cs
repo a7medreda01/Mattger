@@ -29,6 +29,10 @@ namespace Mattger_PL
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<MattgerDBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            if (string.IsNullOrEmpty(connectionString))
+{
+    connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+}
             builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRep<>));
 
             builder.Services.AddScoped<IProductService, ProductService>();
