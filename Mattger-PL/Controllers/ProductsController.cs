@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using Mattger_BL.DTOs;
 using Mattger_BL.IServices;
 using Mattger_DAL.Entities;
@@ -20,72 +21,34 @@ namespace Mattger_PL.Controllers
             this.mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync([FromQuery] ProductQueryParams param)
         {
-            var products = service.GetAll();
+            var products = await  service.GetAllProductsAsync(param);
             var result = mapper.Map<ICollection<ProductDTO>>(products);
             return Ok(result);
         }
-        [HttpGet("search")]
-        public IActionResult GetAll([FromQuery]string search)
-        {
-            var products = service.GetAll(search);
-            var result = mapper.Map<ICollection<ProductDTO>>(products);
-            return Ok(result);
-        }
-        [HttpGet("category")]
-        public IActionResult GetAll([FromQuery] int? category=null)
-        {
-            var products = service.GetAll(category);
-            var result = mapper.Map<ICollection<ProductDTO>>(products);
-            return Ok(result);
-        }
-        //paging
-        [HttpGet("pagination")]
-        public IActionResult GetProducts(
-    [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 10,
-    [FromQuery] int? category = null,
-        [FromQuery] string? search = null)
 
-        {
-            var (items, totalItems) = service.GetProductsAsync(page, pageSize, category, search).Result;
-            var products = mapper.Map<ICollection<ProductDTO>>(items);
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-
-            return Ok(new
-            {
-                Page = page,
-                PageSize = pageSize,
-                TotalItems = totalItems,
-                TotalPages = totalPages,
-                Items = products
-            });
-        }
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var product = service.GetById(id);
+            var product =await service.GetByIdAsync(id);
             if (product == null)
                 return NotFound();
             var result = mapper.Map<ProductDTO>(product);
             return Ok(result);
         }
         [HttpPost]
-        public IActionResult Create(CreateProductDTO product)
+        public IActionResult Create(CreateProductDTO productDto)
         {
-            var result = mapper.Map<Product>(product);
-            service.Add(result);
+            //var result = mapper.Map<Product>(product);
+            service.Add(productDto);
             return Ok();
         }
         [HttpPut("{id}")]
-        public IActionResult Update(int id, CreateProductDTO productDTO)
+        public IActionResult Update(int id, [FromForm] UpdateProductDTO productDTO)
         {
-            var product = mapper.Map<Product>(productDTO);
-            product.Id = id;
-            service.Update(product);
+            service.Update(id, productDTO);
             return Ok();
-
         }
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

@@ -13,24 +13,27 @@ namespace Mattger_BL.Helpers
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
 
-    public class ImageUrlResolver : IValueResolver<Product, ProductDTO, string>
+public class ProductImagesUrlResolver 
+    : IValueResolver<Product, ProductDTO, List<string>>
+{
+    private readonly ApiSettings _settings;
+
+    public ProductImagesUrlResolver(IOptions<ApiSettings> options)
     {
-        private readonly ApiSettings _settings;
-
-        public ImageUrlResolver(IOptions<ApiSettings> options)
-        {
-            _settings = options.Value;
-        }
-
-        public string Resolve(Product source, ProductDTO destination, string destMember, ResolutionContext context)
-        {
-            if (string.IsNullOrEmpty(source.PictureUrl))
-                return null;
-
-            return $"{_settings.BaseUrl}images/{source.PictureUrl}";
-        }
-
+        _settings = options.Value;
     }
+
+    public List<string> Resolve(Product source, ProductDTO destination, List<string> destMember, ResolutionContext context)
+    {
+        if (source.Images == null || !source.Images.Any())
+            return new List<string>();
+
+        return source.Images
+            .Where(i => !string.IsNullOrEmpty(i.ImageUrl))
+            .Select(i => $"{_settings.BaseUrl}images/products/{i.ImageUrl}")
+            .ToList();
+    }
+}
     public class CartItemImageUrlResolver : IValueResolver<CartItem, CartItemDTO, string>
     {
         private readonly ApiSettings _settings;
@@ -43,10 +46,15 @@ namespace Mattger_BL.Helpers
 
         public string Resolve(CartItem source, CartItemDTO destination, string destMember, ResolutionContext context)
         {
-            if (source.Product == null || string.IsNullOrEmpty(source.Product.PictureUrl))
+            if (source.Product == null || source.Product.Images == null || !source.Product.Images.Any())
                 return null;
-            return $"{_settings.BaseUrl}images/{source.Product.PictureUrl}";
 
+            var firstImage = source.Product.Images.FirstOrDefault();
+
+            if (firstImage == null)
+                return null;
+
+            return $"{_settings.BaseUrl}images/products/{firstImage.ImageUrl}";
         }
 
     }

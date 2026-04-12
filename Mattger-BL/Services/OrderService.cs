@@ -36,8 +36,7 @@ namespace Mattger_BL.Services
         public Order GetOrderById(int id)
         {
             return _repo
-                .GetAll(o => o.OrderItems)
-                .FirstOrDefault(o => o.Id == id);
+                .GetOrderById(id);
         }
         public void CreateOrder(string userId, Order newOrder)
         {

@@ -21,8 +21,8 @@ namespace Mattger_BL.Mapping
                     o => o.MapFrom(s => s.ProductBrand.Name))
                 .ForMember(d => d.TypeName,
                     o => o.MapFrom(s => s.ProductType.Name))
-                .ForMember(dest => dest.PictureUrl,
-                opt => opt.MapFrom<ImageUrlResolver>());
+                .ForMember(dest => dest.Images,
+                opt => opt.MapFrom<ProductImagesUrlResolver>()).ReverseMap();
 
             CreateMap<CreateProductDTO, Product>();
 
@@ -63,6 +63,13 @@ namespace Mattger_BL.Mapping
             CreateMap<OrderItem, OrderItemDTO>()
                 .ForMember(dest => dest.ProductName,
                            opt => opt.MapFrom(src => src.Product.Name));
+
+            CreateMap<ProductReview, ProductReviewDTO>().ReverseMap();
+            CreateMap<PaymentMethod, PaymentMethodDDTO>().ReverseMap();
+            CreateMap<Coupon, CouponDTO>().ReverseMap();
+            CreateMap<Wishlist,WishlistDTO>().ReverseMap();
+            CreateMap<WishlistItem,WishlistItemDTO>().ReverseMap();
+
 
         }
     }

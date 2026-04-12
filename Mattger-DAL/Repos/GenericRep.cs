@@ -129,6 +129,15 @@ namespace Mattger_DAL.Repos
             return _dBContext.Carts
                 .Include(c => c.Items)
                 .ThenInclude(i => i.Product)
+                .ThenInclude(p=>p.Images)
+                .FirstOrDefault(c => c.UserId == userId);
+        }
+        public Wishlist GetWishlist(string userId)
+        {
+            return _dBContext.Wishlists
+                .Include(c => c.Items)
+                .ThenInclude(i => i.Product)
+                .ThenInclude(i=>i.Images)
                 .FirstOrDefault(c => c.UserId == userId);
         }
         //مؤقتا
@@ -138,6 +147,34 @@ namespace Mattger_DAL.Repos
                 .Include(c => c.OrderItems)
                 .ThenInclude(i => i.Product)
                 .Where(c => c.UserId == userId).ToList();
+        }
+        public Order GetOrderById(int id)
+        {
+            return _dBContext.Orders
+                .Include(c => c.OrderItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefault(o=>o.Id==id);
+        }
+        //getall products
+        public async Task<IReadOnlyList<Product>> GetAllProductsAsync()
+        {
+            return await _dBContext.Products
+                .AsNoTracking()
+                .Include(p => p.ProductBrand)
+                .Include(p => p.ProductType)
+                .Include(p => p.Images)
+                .Include(p => p.Reviews)
+                .ToListAsync();
+        }
+        public async Task<Product> GetProductAsync(int id)
+        {
+            return await _dBContext.Products
+                .AsNoTracking()
+                .Include(p => p.ProductBrand)
+                .Include(p => p.ProductType)
+                .Include(p => p.Images)
+                .Include(p => p.Reviews)
+                .FirstOrDefaultAsync(p => p.Id==id);
         }
     }
 }

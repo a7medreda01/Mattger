@@ -38,6 +38,13 @@ namespace Mattger_DAL.IRepos
           void Save();
         //cart
         Cart GetCart(string userId);
+        Wishlist GetWishlist(string userId);
         ICollection<Order> GetOrdersByUser(string userId);
+        Task<IReadOnlyList<Product>> GetAllProductsAsync();
+        Task<Product> GetProductAsync(int id);
+        Order GetOrderById(int id);
+
+
+
     }
 }

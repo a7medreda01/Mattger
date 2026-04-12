@@ -108,6 +108,13 @@ namespace Mattger_DAL.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Carts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            UserId = "user-1"
+                        });
                 });
 
             modelBuilder.Entity("Mattger_DAL.Entities.CartItem", b =>
@@ -134,6 +141,71 @@ namespace Mattger_DAL.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("CartItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CartId = 1,
+                            ProductId = 1,
+                            Quantity = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CartId = 1,
+                            ProductId = 2,
+                            Quantity = 2
+                        });
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.Coupon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscountType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Coupons");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "WELCOME10",
+                            Discount = 10,
+                            DiscountType = 1,
+                            EndDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "SAVE500",
+                            Discount = 500,
+                            DiscountType = 2,
+                            EndDate = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Mattger_DAL.Entities.Order", b =>
@@ -147,6 +219,9 @@ namespace Mattger_DAL.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CouponId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -167,6 +242,8 @@ namespace Mattger_DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CouponId");
 
                     b.HasIndex("UserId");
 
@@ -202,6 +279,41 @@ namespace Mattger_DAL.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("Mattger_DAL.Entities.PaymentMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CardName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpiryDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PaymentMethods");
+                });
+
             modelBuilder.Entity("Mattger_DAL.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -210,12 +322,30 @@ namespace Mattger_DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("FlashEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("FlashStartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("OldPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PictureUrl")
                         .HasColumnType("nvarchar(max)");
@@ -229,6 +359,21 @@ namespace Mattger_DAL.Migrations
                     b.Property<int>("ProductTypeId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Rating")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("Sale")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SalesCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
@@ -239,6 +384,84 @@ namespace Mattger_DAL.Migrations
                     b.HasIndex("ProductTypeId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Apple flagship smartphone",
+                            Details = "Titanium design, A17 Pro chip, 48MP camera system, 5x zoom telephoto lens, advanced AI processing, all-day battery life, MagSafe support.",
+                            Discount = 8m,
+                            Name = "iPhone 15 Pro Max",
+                            OldPrice = 65000m,
+                            Price = 60000m,
+                            ProductBrandId = 1,
+                            ProductTypeId = 1,
+                            Quantity = 1,
+                            Rating = 4.9m,
+                            Sale = 1,
+                            SalesCount = 0,
+                            Status = 1,
+                            StockQuantity = 20
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Android premium flagship",
+                            Details = "Snapdragon 8 Gen 3, 200MP camera, S-Pen support, AI translation, 120Hz AMOLED display, DeX productivity mode.",
+                            Discount = 7m,
+                            Name = "Samsung Galaxy S24 Ultra",
+                            OldPrice = 59000m,
+                            Price = 55000m,
+                            ProductBrandId = 2,
+                            ProductTypeId = 1,
+                            Quantity = 1,
+                            Rating = 4.8m,
+                            Sale = 1,
+                            SalesCount = 0,
+                            Status = 1,
+                            StockQuantity = 25
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Professional laptop",
+                            Details = "Apple M3 chip, Liquid Retina XDR display, ultra-fast SSD, 22-hour battery, optimized for developers and creators.",
+                            Discount = 5m,
+                            Name = "MacBook Pro M3 14-inch",
+                            OldPrice = 95000m,
+                            Price = 90000m,
+                            ProductBrandId = 1,
+                            ProductTypeId = 2,
+                            Quantity = 1,
+                            Rating = 5.0m,
+                            Sale = 1,
+                            SalesCount = 0,
+                            Status = 1,
+                            StockQuantity = 10
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Noise cancelling headphones",
+                            Details = "Industry-leading noise cancellation, 30-hour battery, crystal clear sound, adaptive ambient mode, fast charging.",
+                            Discount = 12m,
+                            Name = "Sony WH-1000XM5",
+                            OldPrice = 17000m,
+                            Price = 15000m,
+                            ProductBrandId = 3,
+                            ProductTypeId = 3,
+                            Quantity = 1,
+                            Rating = 4.7m,
+                            Sale = 1,
+                            SalesCount = 0,
+                            Status = 1,
+                            StockQuantity = 35
+                        });
                 });
 
             modelBuilder.Entity("Mattger_DAL.Entities.ProductBrand", b =>
@@ -256,6 +479,87 @@ namespace Mattger_DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductBrands");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Apple"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Samsung"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Sony"
+                        });
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.ProductImages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.ProductReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Design")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Durability")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quality")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReviewerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Usability")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ValueForMoney")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductReviews");
                 });
 
             modelBuilder.Entity("Mattger_DAL.Entities.ProductType", b =>
@@ -273,6 +577,86 @@ namespace Mattger_DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Smartphones"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Laptops"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Headphones"
+                        });
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.Wishlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Wishlists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            UserId = "user-1"
+                        });
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.WishlistItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WishlistId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WishlistId");
+
+                    b.ToTable("WishlistItem");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProductId = 3,
+                            WishlistId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ProductId = 4,
+                            WishlistId = 1
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -325,6 +709,76 @@ namespace Mattger_DAL.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityUser");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "user-1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "39453ff8-ed6f-443f-acc0-f172a5059b61",
+                            Email = "admin@test.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@TEST.COM",
+                            NormalizedUserName = "ADMIN@TEST.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEexamplehash",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "12d31fdb-ed04-4a64-a48a-05410a5143b2",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@test.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -440,6 +894,10 @@ namespace Mattger_DAL.Migrations
 
             modelBuilder.Entity("Mattger_DAL.Entities.Order", b =>
                 {
+                    b.HasOne("Mattger_DAL.Entities.Coupon", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("CouponId");
+
                     b.HasOne("Mattger_DAL.Entities.AppUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
@@ -468,6 +926,17 @@ namespace Mattger_DAL.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Mattger_DAL.Entities.PaymentMethod", b =>
+                {
+                    b.HasOne("Mattger_DAL.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Mattger_DAL.Entities.Product", b =>
                 {
                     b.HasOne("Mattger_DAL.Entities.ProductBrand", "ProductBrand")
@@ -485,6 +954,58 @@ namespace Mattger_DAL.Migrations
                     b.Navigation("ProductBrand");
 
                     b.Navigation("ProductType");
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.ProductImages", b =>
+                {
+                    b.HasOne("Mattger_DAL.Entities.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.ProductReview", b =>
+                {
+                    b.HasOne("Mattger_DAL.Entities.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.Wishlist", b =>
+                {
+                    b.HasOne("Mattger_DAL.Entities.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.WishlistItem", b =>
+                {
+                    b.HasOne("Mattger_DAL.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mattger_DAL.Entities.Wishlist", "Wishlist")
+                        .WithMany("Items")
+                        .HasForeignKey("WishlistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -548,9 +1069,21 @@ namespace Mattger_DAL.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("Mattger_DAL.Entities.Coupon", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("Mattger_DAL.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.Product", b =>
+                {
+                    b.Navigation("Images");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("Mattger_DAL.Entities.ProductBrand", b =>
@@ -561,6 +1094,11 @@ namespace Mattger_DAL.Migrations
             modelBuilder.Entity("Mattger_DAL.Entities.ProductType", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Mattger_DAL.Entities.Wishlist", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
