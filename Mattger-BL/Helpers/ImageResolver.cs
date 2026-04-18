@@ -34,6 +34,28 @@ public class ProductImagesUrlResolver
             .ToList();
     }
 }
+
+    public class UpdateProductImagesUrlResolver
+        : IValueResolver<Product, UpdateProductDTO, List<string>>
+    {
+        private readonly ApiSettings _settings;
+
+        public UpdateProductImagesUrlResolver(IOptions<ApiSettings> options)
+        {
+            _settings = options.Value;
+        }
+
+        public List<string> Resolve(Product source, UpdateProductDTO destination, List<string> destMember, ResolutionContext context)
+        {
+            if (source.Images == null || !source.Images.Any())
+                return new List<string>();
+
+            return source.Images
+                .Where(i => !string.IsNullOrEmpty(i.ImageUrl))
+                .Select(i => $"{_settings.BaseUrl}images/products/{i.ImageUrl}")
+                .ToList();
+        }
+    }
     public class CartItemImageUrlResolver : IValueResolver<CartItem, CartItemDTO, string>
     {
         private readonly ApiSettings _settings;

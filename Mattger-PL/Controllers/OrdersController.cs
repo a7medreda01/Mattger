@@ -3,6 +3,7 @@ using Mattger_BL.DTOs;
 using Mattger_BL.DTOs.Mattger_BL.DTOs;
 using Mattger_BL.IServices;
 using Mattger_DAL.Entities;
+using Mattger_DAL.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace Mattger_PL.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        [Authorize]
+        //[Authorize]
 
         public IActionResult GetAllOrders()
         {
@@ -41,10 +42,11 @@ namespace Mattger_PL.Controllers
         public IActionResult GetOrderById(int orderId)
         {
             var order = _service.GetOrderById(orderId);
-            return Ok(_mapper.Map<OrderDTO>(order));
+            var orderDto = _mapper.Map<OrderDTO>(order);
+            return Ok(orderDto);
         }
         [HttpPut("update")]
-        public IActionResult UpdateStatus(int orderId, string newStatus)
+        public IActionResult UpdateStatus(int orderId, OrderStatus newStatus)
         {
              _service.UpdateOrder(orderId,newStatus);
             var order = _service.GetOrderById(orderId);

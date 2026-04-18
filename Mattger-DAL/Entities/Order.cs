@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mattger_DAL.Entities.Enums;
 
 namespace Mattger_DAL.Entities
 {
@@ -11,6 +12,7 @@ namespace Mattger_DAL.Entities
         public int Id { get; set; }
 
         public string UserId { get; set; }
+        public string? FullName { get; set; }
 
         public AppUser User { get; set; } = default!;
 
@@ -18,7 +20,7 @@ namespace Mattger_DAL.Entities
 
         public decimal TotalPrice { get; set; }
 
-        public string Status { get; set; } = default!;
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public string Address { get; set; }
         public string Phone { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; } = default!;

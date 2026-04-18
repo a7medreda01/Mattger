@@ -27,20 +27,20 @@ namespace Mattger_PL
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            // builder.Services.AddDbContext<MattgerDBContext>(options =>
-            // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDbContext<MattgerDBContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // قراءة Connection String من appsettings.json أو Environment Variable
-var connectionString = Environment.GetEnvironmentVariable("MYSQL_URL");
-if (string.IsNullOrEmpty(connectionString))
-    throw new Exception("MYSQL_URL not found!");
+//            var connectionString = Environment.GetEnvironmentVariable("MYSQL_URL");
+//if (string.IsNullOrEmpty(connectionString))
+//    throw new Exception("MYSQL_URL not found!");
 
 // استخدمه في DbContext
-builder.Services.AddDbContext<MattgerDBContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+//builder.Services.AddDbContext<MattgerDBContext>(options =>
+//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 // تسجيل DbContext
-builder.Services.AddDbContext<MattgerDBContext>(options =>
-    options.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<MattgerDBContext>(options =>
+//    options.UseSqlServer(connectionString));
             builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRep<>));
 
             builder.Services.AddScoped<IProductService, ProductService>();

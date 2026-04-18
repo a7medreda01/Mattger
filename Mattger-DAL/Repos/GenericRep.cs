@@ -151,6 +151,7 @@ namespace Mattger_DAL.Repos
         public Order GetOrderById(int id)
         {
             return _dBContext.Orders
+                .Include(c=>c.User)
                 .Include(c => c.OrderItems)
                 .ThenInclude(i => i.Product)
                 .FirstOrDefault(o=>o.Id==id);

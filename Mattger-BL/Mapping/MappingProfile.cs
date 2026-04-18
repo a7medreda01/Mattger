@@ -23,7 +23,11 @@ namespace Mattger_BL.Mapping
                     o => o.MapFrom(s => s.ProductType.Name))
                 .ForMember(dest => dest.Images,
                 opt => opt.MapFrom<ProductImagesUrlResolver>()).ReverseMap();
-
+            //CreateMap<Product, UpdateProductDTO>()
+            //    .ForMember(dest => dest.Images, opt => opt.MapFrom(src =>
+            //        src.Images.Select(i => i.ImageUrl).ToList()
+            //    ))
+            //    .ReverseMap();
             CreateMap<CreateProductDTO, Product>();
 
             // Brand
@@ -44,12 +48,7 @@ namespace Mattger_BL.Mapping
                 o => o.MapFrom(s => (s.Product.Price * s.Quantity)))
                 .ForMember(d => d.PictureUrl,
                     o => o.MapFrom<CartItemImageUrlResolver>()); // 👈 هنا بدل MapFrom مباشرة
-            // OrderItem
-            CreateMap<OrderItem, OrderItemDTO>()
-                .ForMember(d => d.ProductName,
-                    o => o.MapFrom(s => s.Product.Name))
-                .ForMember(d => d.Price,
-                    o => o.MapFrom(s => s.Product.Price));
+
 
             // Cart
             CreateMap<Cart, CartDTO>()
@@ -62,7 +61,9 @@ namespace Mattger_BL.Mapping
 
             CreateMap<OrderItem, OrderItemDTO>()
                 .ForMember(dest => dest.ProductName,
-                           opt => opt.MapFrom(src => src.Product.Name));
+                           opt => opt.MapFrom(src => src.Product.Name))
+                                .ForMember(d => d.Price,
+                    o => o.MapFrom(s => s.Product.Price)).ReverseMap();
 
             CreateMap<ProductReview, ProductReviewDTO>().ReverseMap();
             CreateMap<PaymentMethod, PaymentMethodDDTO>().ReverseMap();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mattger_DAL.Entities;
+using Mattger_DAL.Entities.Enums;
 
 namespace Mattger_BL.IServices
 {
@@ -19,6 +20,6 @@ namespace Mattger_BL.IServices
         void CreateOrder(string userId,Order order);
 
         void CancelOrder(int orderId);
-        void UpdateOrder(int orderId, string newStatus);
+        void UpdateOrder(int orderId, OrderStatus newStatus);
     }
 }

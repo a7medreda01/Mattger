@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Mattger_BL.IServices;
 using Mattger_DAL.Entities;
+using Mattger_DAL.Entities.Enums;
 using Mattger_DAL.IRepos;
 
 namespace Mattger_BL.Services
@@ -35,8 +36,7 @@ namespace Mattger_BL.Services
         }
         public Order GetOrderById(int id)
         {
-            return _repo
-                .GetOrderById(id);
+            return _repo.GetOrderById(id);
         }
         public void CreateOrder(string userId, Order newOrder)
         {
@@ -50,7 +50,7 @@ namespace Mattger_BL.Services
             {
                 UserId = userId,
                 OrderDate = DateTime.Now,
-                Status = "Pending",
+                Status = OrderStatus.Pending,
                 TotalPrice = 0,
                 OrderItems = new List<OrderItem>(),
                 Phone= newOrder.Phone,
@@ -81,17 +81,16 @@ namespace Mattger_BL.Services
             if (order == null)
                 return;
 
-            order.Status = "Canceled";
+            order.Status = OrderStatus.Cancelled;
 
             _repo.Update(order);
             _repo.Save();
         }
-        public void UpdateOrder(int orderId, string newStatus)
+        public void UpdateOrder(int orderId, OrderStatus newStatus)
         {
             var order = _repo
-                .GetAll(null, o => o.OrderItems)
-                .FirstOrDefault(o => o.Id == orderId);
-
+                .GetOrderById(orderId);
+            
             if (order == null)
                 throw new Exception("Order not found");
 
